@@ -1,65 +1,53 @@
-const minutesElement = document.getElementById('minutes');
-const secondsElement = document.getElementById('seconds');
-const startButton = document.getElementById('start-button');
-const stopButton = document.getElementById('stop-button');
-const resetButton = document.getElementById('reset-button');
-const timerElement = document.querySelector('.timer');
+const timer = document.querySelector('.timer');
+const startBtn = document.getElementById('start');
+const stopBtn = document.getElementById('stop');
+const resetBtn = document.getElementById('reset');
 
 let minutes = 5;
 let seconds = 0;
-let timerInterval;
-let isRunning = false;
+let interval;
 
-startButton.addEventListener('click', startTimer);
-stopButton.addEventListener('click', stopTimer);
-resetButton.addEventListener('click', resetTimer);
+function updateDisplay() {
+    timer.textContent =
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
 
 function startTimer() {
-    if (isRunning) return;
-    isRunning = true;
-    startButton.disabled = true;
-    stopButton.disabled = false;
-    timerElement.classList.add('active');
-    timerInterval = setInterval(updateTimer, 1000);
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+
+    interval = setInterval(() => {
+        if (seconds === 0) {
+            if (minutes === 0) {
+                clearInterval(interval);
+                alert("Time's up!");
+                return;
+            }
+            minutes--;
+            seconds = 59;
+        } else {
+            seconds--;
+        }
+        updateDisplay();
+    }, 1000);
 }
 
 function stopTimer() {
-    isRunning = false;
-    startButton.disabled = false;
-    stopButton.disabled = true;
-    timerElement.classList.remove('active');
-    clearInterval(timerInterval);
+    clearInterval(interval);
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
 }
 
 function resetTimer() {
     stopTimer();
     minutes = 5;
     seconds = 0;
-    minutesElement.textContent = '05';
-    secondsElement.textContent = '00';
-    timerElement.classList.remove('active');
+    updateDisplay();
 }
 
-function updateTimer() {
-    if (seconds === 0) {
-        if (minutes === 0) {
-            stopTimer();
-            alert("Time's up!");
-            return;
-        }
-        minutes--;
-        seconds = 59;
-    } else {
-        seconds--;
-    }
+startBtn.addEventListener('click', startTimer);
+stopBtn.addEventListener('click', stopTimer);
+resetBtn.addEventListener('click', resetTimer);
 
-    minutesElement.style.transform = 'scale(1.1)';
-    secondsElement.style.transform = 'scale(1.1)';
-    setTimeout(() => {
-        minutesElement.style.transform = 'scale(1)';
-        secondsElement.style.transform = 'scale(1)';
-    }, 300);
-
-    minutesElement.textContent = minutes.toString().padStart(2, '0');
-    secondsElement.textContent = seconds.toString().padStart(2, '0');
-}
+// Initialize
+updateDisplay();
