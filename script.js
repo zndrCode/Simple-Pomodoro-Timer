@@ -12,10 +12,12 @@ startButton.addEventListener('click', startTimer);
 stopButton.addEventListener('click', stopTimer);
 
 function startTimer() {
+    console.log('Start timer button clicked!');
     isRunning = true;
     startButton.disabled = true;
     stopButton.disabled = false;
     timerInterval = setInterval(updateTimer, 1000);
+    console.log('Timer interval set to:', timerInterval);
 }
 
 function stopTimer() {
