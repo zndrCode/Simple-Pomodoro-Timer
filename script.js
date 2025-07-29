@@ -1,12 +1,12 @@
-let minutes = 3;
+const minutesElement = document.getElementById('minutes');
+const secondsElement = document.getElementById('seconds');
+const startButton = document.getElementById('start-button');
+const stopButton = document.getElementById('stop-button');
+
+let minutes = 25;
 let seconds = 0;
 let timerInterval;
 let isRunning = false;
-
-const minutesElement = document.getElementById('minutes');
-const secondsElement = document.getElementById('seconds');
-const startButton = document.querySelector('.start-button');
-const stopButton = document.querySelector('.stop-button');
 
 startButton.addEventListener('click', startTimer);
 stopButton.addEventListener('click', stopTimer);
@@ -23,4 +23,18 @@ function stopTimer() {
     startButton.disabled = false;
     stopButton.disabled = true;
     clearInterval(timerInterval);
+}
+
+function updateTimer() {
+    if (seconds === 0) {
+        minutes--;
+        seconds = 60;
+    }
+    seconds--;
+    minutesElement.textContent = minutes.toString().padStart(2, '0');
+    secondsElement.textContent = seconds.toString().padStart(2, '0');
+    if (minutes === 0 && seconds === 0) {
+        stopTimer();
+        alert('Time\'s up!');
+    }
 }
